@@ -35,10 +35,7 @@ class ProtocolNinebot(private val _name: String) {
     private fun ByteArray.toHexString() = joinToString("") { "%02x".format(it) }
 
     fun decrypt(Data: ByteArray, force: Boolean = false): ByteArray {
-        /*   if (block && !force) {
-               return byteArrayOf()
-           }
-           block = true*/
+        
         val decrypted = ByteArray(Data.size - 6)
         System.arraycopy(Data, 0, decrypted, 0, 3)
         var negative = false
