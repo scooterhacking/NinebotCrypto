@@ -43,15 +43,8 @@ class ProtocolNinebot(private val _name: String) {
         System.arraycopy(Data, 0, decrypted, 0, 3)
         var negative = false
         var newMsgIt: UInt = msgIt
-       /* if ((newMsgIt.toByte() < 0) && (Data[Data.size - 2].toLong() shr 7) == 0L) {
-            newMsgIt++
-            Log.d("ToothSErvice", "contador negativo! -> ${newMsgIt}")
-            negative = true
-            //  msgIt += 128u
-            //return byteArrayOf()
-        } else {*/
-            newMsgIt = (newMsgIt and 4294901760u) + ((((Data[Data.size - 2].toLong() and 255) shl 8).toUInt()) + (Data[Data.size - 1].toInt() and 0xff).toUInt())
-        //}
+        
+        newMsgIt = (newMsgIt and 4294901760u) + ((((Data[Data.size - 2].toLong() and 255) shl 8).toUInt()) + (Data[Data.size - 1].toInt() and 0xff).toUInt())
 
         val payloadLen: Int = Data.size - 9
         var payload: ByteArray? = ByteArray(payloadLen)
@@ -66,11 +59,7 @@ class ProtocolNinebot(private val _name: String) {
                 println("\\${payload.toHexString()}\n" +
                         "\\${payloadD.toHexString()}\n" +
                         "\\${payloadE.toHexString()}\")")
-                /*System.Diagnostics.Debug.WriteLine(java.lang.String.Format("First Not eq \n\n\t{0}\n\t{1}\n\t{2}",
-                        LineSeparator.Windows.Security.Cryptography.CryptographicBuffer.EncodeToHexString(payload.AsBuffer()),
-                        LineSeparator.Windows.Security.Cryptography.CryptographicBuffer.EncodeToHexString(payload_d.AsBuffer()),
-                        LineSeparator.Windows.Security.Cryptography.CryptographicBuffer.EncodeToHexString(payload_e.AsBuffer())))*/
-            }
+           }
             payload = cryptoFirst(payload)
             System.arraycopy(payload, 0, decrypted, 3, payload.size)
             if (decrypted[0] == 0x5A.toByte() &&
@@ -91,10 +80,6 @@ class ProtocolNinebot(private val _name: String) {
                         "\\${payload.toHexString()}\n" +
                         "\\${payloadD.toHexString()}\n" +
                         "\\${payloadE.toHexString()}\")")
-                /* System.Diagnostics.Debug.WriteLine(java.lang.String.Format("Next Not eq \n\t{0}\n\t{1}\n\t{2}",
-                         LineSeparator.Windows.Security.Cryptography.CryptographicBuffer.EncodeToHexString(payload.AsBuffer()),
-                         LineSeparator.Windows.Security.Cryptography.CryptographicBuffer.EncodeToHexString(payload_d.AsBuffer()),
-                         LineSeparator.Windows.Security.Cryptography.CryptographicBuffer.EncodeToHexString(payload_e.AsBuffer())))*/
             }
             payload = cryptoNext(payload, newMsgIt)
             System.arraycopy(payload, 0, decrypted, 3, payload.size)
