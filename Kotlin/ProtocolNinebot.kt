@@ -90,17 +90,10 @@ class ProtocolNinebot(private val _name: String) {
                 calcSha1Key(randomAppData, randomBleData)
             }
 
-            if (negative) {
-                Log.d("ToothSErvice", "intial contador decript -> $msgIt")
-                msgIt++
-                Log.d("ToothSErvice", "contador decript +1 -> $msgIt")
+            if (msgIt > newMsgIt) {
+                msgIt = newMsgIt
             } else {
-                Log.d("ToothSErvice", "intial contador decript = -> $msgIt")
-                if (msgIt > newMsgIt) {
-                    msgIt = newMsgIt
-                }
-                
-                Log.d("ToothSErvice", "contador decript = -> $msgIt")
+                msgIt++
             }
 
         }
