@@ -37,3 +37,5 @@ Make sure you have a knowledge of the legacy Ninebot-Xiaomi protocol before begi
 **Tip:** If you want compat for both crypto and legacy protocols, you can implement a flag that will bypass the crypto lib methods depending on whether or not you get an answer from the initial 0x5B message.
 
 
+## Known issues
+See [#13](https://github.com/scooterhacking/NinebotCrypto/issues/13): crypto iterator bug, communication issues on newer scooters
