@@ -155,9 +155,6 @@ class NinebotCrypto {
         encrypted.append(decryptedData[0..<3])
         let payload = decryptedData[3...]
 
-        if self.messageCounter == 0 {
-            self.messageCounter += 1 // TODO: i feel like this can be removed, but am keeping it in for compat with the orig NBCrypto
-        }
         self.messageCounter += 1
 
         let crcPayload = self.messageCounter == 0 ? payload : decryptedData
