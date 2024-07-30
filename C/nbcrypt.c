@@ -135,7 +135,7 @@ uint8_t * nbc_encrypt(nbcdata nbc, const uint8_t* src, size_t srcLength) {
 	} else {
 		++nbc->msg_it;
 
-		uint32_t crc = nbc_CalcCrcNextMsg(nbc, src  , pLength, nbc->msg_it);
+		uint32_t crc = nbc_CalcCrcNextMsg(nbc, src, srcLength, nbc->msg_it);
 		nbc_CryptoNext    (nbc, dst+3, src+3, pLength, nbc->msg_it);
 
 		memcpy(dst + pLength + 3, &crc, 4);
