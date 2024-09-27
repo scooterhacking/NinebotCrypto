@@ -123,14 +123,19 @@ class NinebotCrypto {
                 }
                 self.calcKey(Data(deviceName.utf8), randomBLEData)
             }
-        } else if newMessageCounter > messageCounter {
+        } else {
             if decrypted.starts(with: self.cryptoReadyMessage) {
                 let randomAppData = self.randomAppData ?? Data(count: 8)
                 let randomBLEData = self.randomBLEData ?? Data(count: 8)
                 self.calcKey(randomAppData, randomBLEData)
                 self.printDebug("Crypto ready")
             }
-            self.messageCounter = newMessageCounter
+            
+            if newMessageCounter > messageCounter {
+                self.messageCounter = newMessageCounter
+            } else {
+                self.messageCounter += 1
+            }
         }
 
         return decrypted
