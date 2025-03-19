@@ -1,5 +1,8 @@
 ﻿#include "NinebotCrypto.h"
 #include <algorithm>
+#include "aes.hpp"  // from Tiny-AES-c
+#include <cstring>
+#include "sha1.h" // from https://github.com/clibs/sha1
 
 NinebotCrypto::VarArray NinebotCrypto::CryptoFirst(const VarArray &Data) {
 	std::vector<uint8_t> result;
@@ -141,34 +144,37 @@ void NinebotCrypto::CalcSha1Key(const Array16 &Data1, const Array16 &Data2) {
 }
 
 NinebotCrypto::Array16 NinebotCrypto::AesEcbEncrypt(const Array16 &Data, const Array16 &key) {
-	// TODO:
-	//SymmetricKeyAlgorithmProvider aes = SymmetricKeyAlgorithmProvider.OpenAlgorithm(SymmetricAlgorithmNames.AesEcb);
-	//var symetricKey = aes.CreateSymmetricKey(key.AsBuffer());
-	//var buffEncrypted = CryptographicEngine.Encrypt(symetricKey, data.AsBuffer(), null);
-	//return buffEncrypted.ToArray();
-	return {};
+    Array16 output;
+    memcpy(output.data(), Data.data(), 16);
+    
+    struct AES_ctx ctx;
+    AES_init_ctx(&ctx, key.data());
+    
+    AES_ECB_encrypt(&ctx, output.data());
+    
+    return output;
 }
 
-std::array<uint8_t, 20> Sha1(const std::array<uint8_t, 32> &Data) {
-   //HashAlgorithmProvider sha1 = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha1);
-   //var buffSha1 = sha1.HashData(data.AsBuffer());
-   //return buffSha1.ToArray();
-   return {};
+
+
+std::array<uint8_t, 20> NinebotCrypto::Sha1(const std::array<uint8_t, 32>& Data) {
+    std::array<uint8_t, 20> hash;
+    SHA1(reinterpret_cast<char*>(hash.data()), reinterpret_cast<const char*>(Data.data()), Data.size());
+    return hash;
 }
 
 NinebotCrypto::Array16 NinebotCrypto::XOR16(const Array16 &Data1, const Array16 &Data2) {
-	Array16 Data;
-	for (size_t i = 0; i < 16; ++i)
-		Data[i] = (Data1[i] ^ Data[i]);
-
-	return Data;
+    Array16 Data;
+    for (size_t i = 0; i < 16; ++i)
+        Data[i] = Data1[i] ^ Data2[i];
+    return Data;
 }
 
 NinebotCrypto::NinebotCrypto(std::string Name) {
-	_name.fill(0);
-	_random_ble_data.fill(0);
-	std::copy(_name.begin(), _name.end(), Name.begin());
-	CalcSha1Key(_name, _fw_data);
+    _name.fill(0);
+    _random_ble_data.fill(0);
+    std::copy(Name.begin(), Name.end(), _name.begin());
+    CalcSha1Key(_name, _fw_data);
 }
 
 NinebotCrypto::VarArray NinebotCrypto::Decrypt(const VarArray &Data) {
