@@ -39,4 +39,5 @@ Make sure you have a knowledge of the legacy Ninebot-Xiaomi protocol before begi
 
 ## Known issues
 See [#13](https://github.com/scooterhacking/NinebotCrypto/issues/13): crypto iterator bug, communication issues on newer scooters
+
 See [#16](https://github.com/scooterhacking/NinebotCrypto/issues/16): C version is currently broken, use C++ if possible
